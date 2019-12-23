@@ -20,7 +20,6 @@ import net.corda.node.services.persistence.AttachmentStorageInternal
 import net.corda.nodeapi.internal.cordapp.CordappLoader
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.streams.toList
 
 /**
  * Cordapp provider and store. For querying CorDapps for their attachment and vice versa.
@@ -115,7 +114,7 @@ open class CordappProviderImpl(val cordappLoader: CordappLoader,
      */
     private fun loadAttachmentFixups(): List<AttachmentFixup> {
         return cordappLoader.appClassLoader.getResources("META-INF/Corda-Fixups").asSequence().flatMapTo(ArrayList()) { fixup ->
-            fixup.openStream().bufferedReader().lines().use { lines ->
+            fixup.openStream().bufferedReader().useLines { lines ->
                 lines.filter(String::isNotBlank).map { line ->
                     val tokens = line.split("=>", limit = 2)
                     require(tokens.size == 2) {
