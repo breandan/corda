@@ -40,7 +40,8 @@ class ContractWithCordappFixupTest {
                 portAllocation = incrementalPortAllocation(),
                 startNodesInProcess = false,
                 notarySpecs = listOf(NotarySpec(DUMMY_NOTARY_NAME, validating = true)),
-                cordappsForAllNodes = cordapps
+                cordappsForAllNodes = cordapps,
+                systemProperties = mapOf("net.corda.transactionbuilder.missingclass.disabled" to true.toString())
             )
         }
 

@@ -103,6 +103,16 @@ open class CordappProviderImpl(val cordappLoader: CordappLoader,
                 } to cordapp.jarPath
             }.toMap()
 
+    /**
+     * Loads the "fixup" rules from all META-INF/Corda-Fixups files.
+     * These files have the following format:
+     *     <AttachmentId>,<AttachmentId>...=><AttachmentId>,<AttachmentId>,...
+     * where each <AttachmentId> is the SHA256 of a CorDapp JAR that
+     * [TransactionBuilder] will expect to find inside [AttachmentStorage].
+     *
+     * These rules are for repairing broken CorDapps. A correctly written
+     * CorDapp should not require them.
+     */
     private fun loadAttachmentFixups(): List<AttachmentFixup> {
         return cordappLoader.appClassLoader.getResources("META-INF/Corda-Fixups").asSequence().flatMapTo(ArrayList()) { fixup ->
             fixup.openStream().bufferedReader().lines().use { lines ->
